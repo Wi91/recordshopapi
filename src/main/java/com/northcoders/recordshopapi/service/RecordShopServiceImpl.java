@@ -24,12 +24,12 @@ public class RecordShopServiceImpl implements RecordShopService {
 
     @Override
     public Optional<Album> getAlbumById(Long id) {
-        return Optional.empty();
+        return recordShopRepository.findById(id);
     }
 
     @Override
     public Album addAlbum(Album album) {
-        return null;
+        return recordShopRepository.save(album);
     }
 
     @Override
