@@ -40,11 +40,6 @@ class RecordShopServiceImplTest {
 
         assertThat(testResult).hasSize(3);
         assertThat(testResult).isEqualTo(testAlbumList);
-
-
-
-
-
     }
 
     @Test
@@ -53,6 +48,14 @@ class RecordShopServiceImplTest {
 
     @Test
     void addAlbum() {
+
+        var testAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20);
+
+        when (mockRecordShopRepository.save(testAlbum)).thenReturn(testAlbum);
+
+        Album testResult = recordShopServiceImpl.addAlbum(testAlbum);
+
+        assertThat(testResult).isEqualTo(testAlbum);
     }
 
     @Test
