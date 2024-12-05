@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.*;
 
-import java.io.Serial;
 
 @Entity
 @Data
@@ -15,8 +14,7 @@ import java.io.Serial;
 @Getter
 @Setter
 @Builder
-
-public class Record {
+public class Album {
 
     @Id
     @GeneratedValue
@@ -24,7 +22,7 @@ public class Record {
     Long id;
 
     @Column
-    String albumTitle;
+    String albumName;
 
     @Column
     String artistName;
@@ -33,7 +31,7 @@ public class Record {
     Genre genre;
 
     @Column
-    String dateReleased;
+    String yearReleased;
 
     @Column
     int stock;
