@@ -30,7 +30,7 @@ public class RecordShopController {
         Album newAlbum = recordShopService.addAlbum(album);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Album", "/api/v1/record-shop/" + newAlbum.getId().toString());
-        return new ResponseEntity<>(newAlbum, httpHeaders, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(newAlbum, httpHeaders, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

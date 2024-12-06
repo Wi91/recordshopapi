@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -97,8 +98,26 @@ class RecordShopControllerTests {
 
 
     @Test
-    void addAlbum() {
+    void addAlbum() throws Exception {
 
+        Album testAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20);
+
+        when (mockRecordShopService.addAlbum(testAlbum)).thenReturn(testAlbum);
+
+        String testAlbumAsString = mapper.writeValueAsString(testAlbum);
+
+        this.mockMvcController.perform(
+                MockMvcRequestBuilders.post("/api/v1/record-shop")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(testAlbumAsString))
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.albumName").value("Abbey Road"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artistName").value("The Beatles"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(String.valueOf(Genre.POP)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.yearReleased").value("1969"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stock").value(20))
+                .andReturn();
 
         }
 
