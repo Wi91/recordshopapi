@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -123,15 +124,41 @@ class RecordShopControllerTests {
 
 
     @Test
-    void updateAlbumById() {
+    void updateAlbumById() throws Exception {
 
+        Album testAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20);
 
+        Album testUpdatedAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.ROCK, "1973", 5);
+
+        when (mockRecordShopService.updateAlbumById(1L, testAlbum)).thenReturn(testUpdatedAlbum);
+
+        this.mockMvcController.perform(
+                MockMvcRequestBuilders.put("/api/v1/record-shop/{id}", testAlbum.getId().toString()))
+                .andExpect(status().isAccepted())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.albumName").value("Abbey Road"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artistName").value("The Beatles"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(String.valueOf(Genre.ROCK)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.yearReleased").value("1973"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stock").value(5))
+                .andReturn();
+//Likely problem with URI causing 400 error
     }
 
 
     @Test
-    void deleteAlbumById() {
+    void deleteAlbumById() throws Exception {
 
+        Album testAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20);
+
+        String deletedMessage = "The following Album Has Been Removed: " + testAlbum.getAlbumName();
+
+        when(mockRecordShopService.deleteAlbumById(1L)).thenReturn(deletedMessage);
+
+        this.mockMvcController.perform(
+                MockMvcRequestBuilders.delete("/api/v1/record-shop/1"))
+                .andExpect(status().isAccepted())
+                .andReturn();
 
 }
 }
