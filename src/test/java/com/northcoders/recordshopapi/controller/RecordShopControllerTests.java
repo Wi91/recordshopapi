@@ -28,6 +28,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -61,13 +62,57 @@ class RecordShopControllerTests {
         testAlbumList.add(new Album(2L, "Led Zeppelin II", "Led Zeppelin", Genre.ROCK, "1969", 10));
         testAlbumList.add(new Album(3L, "The Dark Side of the Moon", "Pink Floyd", Genre.ROCK, "1969", 5));
 
-        when (mockRecordShopService.getAllAlbums()).thenReturn(testAlbumList);
+        when(mockRecordShopService.getAllAlbums()).thenReturn(testAlbumList);
         this.mockMvcController.perform(
-                MockMvcRequestBuilders.get("/api/v1/record-shop"))
-                        .andExpect(status().isOk())
+                        MockMvcRequestBuilders.get("/api/v1/record-shop"))
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].albumName").value("Abbey Road"))
                 .andReturn();
     }
 
+
+
+    @Test
+    void getAlbumById() throws Exception {
+
+        List<Album> testAlbumList = new ArrayList<>();
+
+        testAlbumList.add(new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20));
+        testAlbumList.add(new Album(2L, "Led Zeppelin II", "Led Zeppelin", Genre.ROCK, "1969", 10));
+        testAlbumList.add(new Album(3L, "The Dark Side of the Moon", "Pink Floyd", Genre.ROCK, "1969", 5));
+
+        when (mockRecordShopService.getAlbumById(1L)).thenReturn(Optional.ofNullable(testAlbumList.getFirst()));
+                this.mockMvcController.perform(
+                        MockMvcRequestBuilders.get("/api/v1/record-shop/1"))
+                        .andExpect(status().isFound())
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.albumName").value("Abbey Road"))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.artistName").value("The Beatles"))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(String.valueOf(Genre.POP)))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.yearReleased").value("1969"))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.stock").value(20))
+                        .andReturn();
+    }
+
+
+    @Test
+    void addAlbum() {
+
+
+        }
+
+
+    @Test
+    void updateAlbumById() {
+
+
+    }
+
+
+    @Test
+    void deleteAlbumById() {
+
+
+}
 }
