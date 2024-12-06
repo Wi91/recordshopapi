@@ -4,7 +4,6 @@ import com.northcoders.recordshopapi.model.Album;
 import com.northcoders.recordshopapi.repository.RecordShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +45,10 @@ public class RecordShopServiceImpl implements RecordShopService {
 
     @Override
     public String deleteAlbumById(Long id) {
-        return "";
+        Album deletedAlbum = getAlbumById(id).get();
+        String deletedAlbumName = deletedAlbum.getAlbumName();
+        recordShopRepository.deleteById(id);
+        return "The following Album Has Been Removed: " + deletedAlbumName;
     }
 }
 

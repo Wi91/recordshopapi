@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @DataJpaTest
@@ -89,5 +91,14 @@ class RecordShopServiceImplTest {
 
     @Test
     void deleteAlbumById() {
+
+        Album testAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20);
+        mockRecordShopRepository.save(testAlbum);
+
+        when (mockRecordShopRepository.findById(1L)).thenReturn(Optional.of(testAlbum));
+        recordShopServiceImpl.deleteAlbumById(1L);
+
+       assertThat(testAlbum).isNotIn(mockRecordShopRepository);
+
     }
 }

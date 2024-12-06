@@ -45,10 +45,11 @@ public class RecordShopController {
     @PutMapping("/{id}")
     public ResponseEntity<Album> updateAlbumById(@PathVariable("id") Long id, @RequestBody Album album) {
         return new ResponseEntity<>(recordShopService.updateAlbumById(id, album), HttpStatus.ACCEPTED);
-
     }
 
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAlbumByID (@PathVariable("id") Long id) {
+        return new ResponseEntity<>(recordShopService.deleteAlbumById(id), HttpStatus.ACCEPTED);
+    }
 
 }
