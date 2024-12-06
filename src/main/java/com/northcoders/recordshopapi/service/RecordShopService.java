@@ -15,5 +15,5 @@ Album addAlbum(Album album);
 
 Album updateAlbumById(Long id, Album album);
 
-String deleteRecordById(Long id);
+String deleteAlbumById(Long id);
 }

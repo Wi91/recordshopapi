@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -25,7 +26,6 @@ class RecordShopServiceImplTest {
     private RecordShopServiceImpl recordShopServiceImpl;
 
     @Test
-    @DisplayName("Test to retrieve all input items")
     public void testGetAllAlbums() {
 
         List<Album> testAlbumList = new ArrayList<>();
@@ -44,6 +44,18 @@ class RecordShopServiceImplTest {
 
     @Test
     void getAlbumById() {
+
+        List<Album> testAlbumList = new ArrayList<>();
+
+        testAlbumList.add(new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20));
+        testAlbumList.add(new Album(2L, "Led Zeppelin II", "Led Zeppelin", Genre.ROCK, "1969", 10));
+        testAlbumList.add(new Album(3L, "The Dark Side of the Moon", "Pink Floyd", Genre.ROCK, "1969", 5));
+
+        when (mockRecordShopRepository.findById(1L)).thenReturn(Optional.ofNullable(testAlbumList.getFirst()));
+
+        Optional<Album> testResult = recordShopServiceImpl.getAlbumById(1L);
+
+        assertThat(testResult).contains(testAlbumList.getFirst());
     }
 
     @Test
@@ -60,9 +72,22 @@ class RecordShopServiceImplTest {
 
     @Test
     void updateAlbumById() {
+
+        Album testAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1969", 20);
+        mockRecordShopRepository.save(testAlbum);
+
+        Album replacementAlbum = new Album(1L, "Abbey Road", "The Beatles", Genre.POP, "1973", 5);
+
+        when (mockRecordShopRepository.findById(1L)).thenReturn(Optional.of(replacementAlbum));
+
+        Album testResult = recordShopServiceImpl.updateAlbumById(1L, replacementAlbum);
+
+        assertThat(testResult).isEqualTo(replacementAlbum);
+
+
     }
 
     @Test
-    void deleteRecordById() {
+    void deleteAlbumById() {
     }
 }
